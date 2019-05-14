@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.listadecompras.Activities.SettingActivity"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_product_list"
+            android:icon="@drawable/cart"
+            android:title="@string/lista_compras" />
+        <item
+            android:id="@+id/nav_global_setting"
+            android:icon="@drawable/settings_tool"
+            android:title="@string/settings_menu" />
+    </group>
+    <item android:title="@string/unibratec">
+        <menu>
+            <item/>
+        </menu>
+    </item>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/logout"
+            android:title="@string/sair" />
+    </group>
+
+</menu>
