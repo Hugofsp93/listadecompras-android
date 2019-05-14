@@ -61,11 +61,11 @@
         android:id="@+id/link_signup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="24dp"
         android:gravity="center"
-        android:text="Não tem cadastro? Clique aqui."
         android:onClick="goSignUp"
+        android:text="Não tem cadastro? Clique aqui"
         android:textSize="16dip" />
 
 </LinearLayout>

@@ -32,29 +32,14 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private TextView mTextViewResult;
-    // Activity activity = this;
-    Handler mHandler;
-    Runnable mNextActivityCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mHandler = new Handler();
-        mNextActivityCallback = new Runnable() {
-            @Override
-            public void run() {
-                // Intent to jump to the next activity
-//                Intent intent = new Intent(activity, MainActivity.class);
-//                startActivity(intent);
-//                finish(); // so the splash activity goes away
-            }
-        };
-        mHandler.postDelayed(mNextActivityCallback, 2000L);
 
         mTextViewResult = findViewById(R.id.product_list);
 
