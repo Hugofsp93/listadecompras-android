@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,13 +13,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-// import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.example.listadecompras.Activities.LoginActivity;
 import com.example.listadecompras.Activities.SettingActivity;
+import com.github.rodlibs.persistencecookie.PersistentCookieStore;
 
 import java.io.IOException;
 
@@ -35,8 +37,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        // onProductLists();
+        onProductLists();
     }
 
     public void goSettings(){
@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_global_setting) {
             goSettings();
+        } else if (id == R.id.nav_logout){
+            onLogout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -99,10 +101,17 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void onLogout(){
+        (new PersistentCookieStore(MainActivity.this)).removeAll();
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void onProductLists(){
         OkHttpClient client = new OkHttpClient();
 
-        String url = "https://listadecompras-unibratec.herokuapp.com/pt-BR/product_lists";
+        String url = "https://listadecompras-unibratec.herokuapp.com/pt-BR/product_lists.json";
 
         Request request = new Request.Builder()
                 .url(url)
