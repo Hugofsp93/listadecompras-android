@@ -1,36 +1,9 @@
 package com.example.listadecompras.Network;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
-import com.example.listadecompras.MainActivity;
 import com.github.rodlibs.persistencecookie.PersistentCookieStore;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
 import java.io.IOException;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -41,32 +14,19 @@ import okhttp3.Response;
 
 public class NetworkOkHttp {
 
-    public static final String URL_APPLICATION = "https://listadecompras-unibratec.herokuapp.com/";
+    private static final String URL_APPLICATION = "https://listadecompras-unibratec.herokuapp.com/";
     private static final String QUERY_LOGIN = URL_APPLICATION + "users/sign_in.json";
     private static final String QUERY_REGISTRE = URL_APPLICATION + "admin/users.json";
+    private static final String QUERY_SETTING = URL_APPLICATION + "global_settings/4/edit.json";
 //    private static final String QUERY_RECOVER_PASSWORD = URL_APPLICATION + "users/password.json";
 //    private static final String QUERY_UPDATE = URL_APPLICATION + "users.json";
 
-    public ProgressDialog mDialog;
     private Context context;
-    PersistentCookieStore myCookie;
-//    private String idItem;
-//    private String message;
-//    boolean flagMain = true;
-//    ProgressDialog progress;
-//    public static boolean flagDeslogado;
-//    private int progressParcial = 0;
-
-
-
+    private PersistentCookieStore myCookie;
 
     public NetworkOkHttp(Context context) {
         this.context = context;
     }
-
-
-
-
 
     public void login(String email, String password, final HttpCallback cb) {
         final String json = "{\"user\":{" +
@@ -154,8 +114,47 @@ public class NetworkOkHttp {
         });
     }
 
+    public void settings(boolean singlelist, final HttpCallback cb){
+        final String json = "{\"global_setting\":{" +
+                "\"single_list\":\"" + singlelist + "\"}}";
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, json);
+        if (myCookie == null) {
+            myCookie = new PersistentCookieStore(context);
+        }
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(30000,TimeUnit.MILLISECONDS)
+                .writeTimeout(30000,TimeUnit.MILLISECONDS)
+                .readTimeout(30000,TimeUnit.MILLISECONDS).build();
 
 
+        Request request = new Request.Builder()
+                .url(QUERY_SETTING)
+                .put(body)
+                .build();
+
+
+        final Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (!call.isCanceled()) {
+                    cb.onFailure(null, e);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    cb.onSuccess(response.body().string());
+                } else {
+                    cb.onFailure(response.body().string(), null);
+                }
+            }
+        });
+
+    }
 
 //    public void update(Usuario user, String senhaAtual, final HttpCallback cb) {
 //        mDialog.show();
