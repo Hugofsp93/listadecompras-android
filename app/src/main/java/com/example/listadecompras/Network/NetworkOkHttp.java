@@ -115,8 +115,8 @@ public class NetworkOkHttp {
     }
 
     public void settings(boolean singlelist, final HttpCallback cb){
-        final String json = "{\"global_setting\":{" +
-                "\"single_list\":\"" + singlelist + "\"}}";
+        final String json = "{\"single_list\":{" +
+                "\"single_list_cenario\":\"" + singlelist + "\"}}";
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(JSON, json);
