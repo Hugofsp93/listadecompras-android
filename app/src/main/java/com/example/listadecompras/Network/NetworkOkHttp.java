@@ -18,7 +18,9 @@ public class NetworkOkHttp {
     private static final String QUERY_LOGIN = URL_APPLICATION + "users/sign_in.json";
     private static final String QUERY_REGISTRE = URL_APPLICATION + "admin/users.json";
     private static final String QUERY_PRODUCTS = URL_APPLICATION + "product_lists.json";
-    private static final String QUERY_SETTING = URL_APPLICATION + "global_settings/" + "id" + "/edit.json";
+    private static final String QUERY_SETTING = URL_APPLICATION + "global_settings/";
+    private static final String QUERY_ID_SETTING = "4";
+    private static final String QUERY_SETTING2 = QUERY_SETTING + QUERY_ID_SETTING;
 //    private static final String QUERY_RECOVER_PASSWORD = URL_APPLICATION + "users/password.json";
 //    private static final String QUERY_UPDATE = URL_APPLICATION + "users.json";
 
@@ -137,7 +139,6 @@ public class NetworkOkHttp {
                 .post(body)
                 .build();
 
-
         final Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -160,7 +161,7 @@ public class NetworkOkHttp {
 
     public void settings(boolean singlelist, final HttpCallback cb) {
         final String json = "{\"single_list\":{" +
-                "\"single_list_cenario\":\"" + singlelist + "\"}}";
+                "\"single_list_cenario\":" + singlelist + "}}";
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(JSON, json);
@@ -172,12 +173,10 @@ public class NetworkOkHttp {
                 .writeTimeout(30000, TimeUnit.MILLISECONDS)
                 .readTimeout(30000, TimeUnit.MILLISECONDS).build();
 
-
         Request request = new Request.Builder()
-                .url(QUERY_SETTING)
+                .url(QUERY_SETTING2)
                 .put(body)
                 .build();
-
 
         final Call call = client.newCall(request);
         call.enqueue(new Callback() {

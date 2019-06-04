@@ -38,6 +38,11 @@ public class SettingActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (sw.isChecked()){
+                            sw.setChecked(true);
+                        } else {
+                            sw.setChecked(false);
+                        }
                         Toast.makeText(SettingActivity.this, "Configurações salvas!", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(SettingActivity.this, MainActivity.class);
                         startActivity(intent);
