@@ -1,13 +1,9 @@
 package com.example.listadecompras.Network;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-
 import com.github.rodlibs.persistencecookie.PersistentCookieStore;
-
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -18,14 +14,14 @@ import okhttp3.Response;
 
 public class NetworkOkHttp {
 
-    public static final String URL_APPLICATION = "https://listadecompras-unibratec.herokuapp.com/";
+    private static final String URL_APPLICATION = "https://listadecompras-unibratec.herokuapp.com/";
     private static final String QUERY_LOGIN = URL_APPLICATION + "users/sign_in.json";
     private static final String QUERY_REGISTRE = URL_APPLICATION + "admin/users.json";
     private static final String QUERY_PRODUCTS = URL_APPLICATION + "product_lists.json";
+    private static final String QUERY_SETTING = URL_APPLICATION + "global_settings/" + "id" + "/edit.json";
 //    private static final String QUERY_RECOVER_PASSWORD = URL_APPLICATION + "users/password.json";
 //    private static final String QUERY_UPDATE = URL_APPLICATION + "users.json";
 
-    public ProgressDialog mDialog;
     private Context context;
     PersistentCookieStore myCookie;
 
@@ -136,7 +132,6 @@ public class NetworkOkHttp {
                 .writeTimeout(30000,TimeUnit.MILLISECONDS)
                 .readTimeout(30000,TimeUnit.MILLISECONDS).build();
 
-
         Request request = new Request.Builder()
                 .url(QUERY_REGISTRE)
                 .post(body)
@@ -161,6 +156,48 @@ public class NetworkOkHttp {
                 }
             }
         });
+    }
+
+    public void settings(boolean singlelist, final HttpCallback cb) {
+        final String json = "{\"single_list\":{" +
+                "\"single_list_cenario\":\"" + singlelist + "\"}}";
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, json);
+        if (myCookie == null) {
+            myCookie = new PersistentCookieStore(context);
+        }
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(30000, TimeUnit.MILLISECONDS)
+                .writeTimeout(30000, TimeUnit.MILLISECONDS)
+                .readTimeout(30000, TimeUnit.MILLISECONDS).build();
+
+
+        Request request = new Request.Builder()
+                .url(QUERY_SETTING)
+                .put(body)
+                .build();
+
+
+        final Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                if (!call.isCanceled()) {
+                    cb.onFailure(null, e);
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    cb.onSuccess(response.body().string());
+                } else {
+                    cb.onFailure(response.body().string(), null);
+                }
+            }
+        });
+
     }
 
     public interface HttpCallback {
