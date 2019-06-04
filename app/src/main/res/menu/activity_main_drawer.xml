@@ -2,7 +2,7 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.listadecompras.Activities.SettingActivity"
+    tools:context="com.example.listadecompras.Activities"
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
